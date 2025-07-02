@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #d4f7d4;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            width: 200px;
+        }
+        .btn-purple {
+            background-color: #6f42c1;
+            color: white;
+        }
+        .btn-purple:hover {
+            background-color: #5a32a3;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://www.8bellsresearch.com/wp-content/uploads/2020/05/8BELLS-LOGO-1200-mark.png" alt="8Bells Logo">
+        </div>
+        
+        <h1 class="text-center mt-5">Lab Inventory</h1>
+
+        <!-- Add Item -->
+        <h2 class="mt-5">Add New Item</h2>
+        <form id="addForm">
+            <div class="form-group">
+                <label for="name">Item Name:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="barcode">Barcode:</label>
+                <input type="text" class="form-control" id="barcode" name="barcode" required>
+            </div>
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="number" class="form-control" id="quantity" name="quantity" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" class="form-control" id="location" name="location">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="submitAddForm()">Add Item</button>
+        </form>
+
+        <!-- Remove Item -->
+        <h2 class="mt-5">Remove Item</h2>
+        <form id="removeForm">
+            <div class="form-group">
+                <label for="barcode_remove">Item Barcode:</label>
+                <input type="text" class="form-control" id="barcode_remove" name="barcode" required>
+            </div>
+            <div class="form-group">
+                <label for="quantity_remove">Quantity to Remove:</label>
+                <input type="number" class="form-control" id="quantity_remove" name="quantity" required>
+            </div>
+            <button type="button" class="btn btn-danger" onclick="submitRemoveForm()">Remove Item</button>
+        </form>
+
+        <!-- Buttons -->
+        <div class="mt-4">
+            <a href="/inventory" class="btn btn-info mr-2">View Current Inventory</a>
+            <a href="/scan" class="btn btn-purple">Scan Item</a>
+        </div>
+    </div>
+
+    <script>
+        function submitAddForm() {
+            const formData = {
+                name: document.getElementById("name").value,
+                barcode: document.getElementById("barcode").value,
+                quantity: document.getElementById("quantity").value,
+                location: document.getElementById("location").value
+            };
+
+            fetch('/inventory/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message || "Item added successfully.");
+                document.getElementById("addForm").reset();
+            })
+            .catch(err => alert("Error adding item"));
+        }
+
+        function submitRemoveForm() {
+            const form = document.getElementById("removeForm");
+            const formData = new FormData(form);
+
+            fetch('/inventory/remove', {
+                method: 'POST',
+                body: formData
+            })
+            .then(() => {
+                alert("Item removed successfully.");
+                form.reset();
+            })
+            .catch(() => alert("Error removing item."));
+        }
+    </script>
+</body>
+</html>
