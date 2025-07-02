@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Item Scan Result</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #d4f7d4;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .btn-purple {
+            background-color: #6f42c1;
+            color: white;
+        }
+        .btn-purple:hover {
+            background-color: #5936a1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Item: {{ item.name }}</h2>
+        <div class="card p-3 mb-4">
+            <p><strong>Barcode:</strong> {{ item.barcode }}</p>
+            <p><strong>Location:</strong> {{ item.location }}</p>
+            <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+        </div>
+
+        <h3>Move IN</h3>
+        <form method="POST" action="/inventory/add" class="mb-4">
+            <input type="hidden" name="barcode" value="{{ item.barcode }}">
+            <input type="hidden" name="name" value="{{ item.name }}">
+            <input type="hidden" name="location" value="{{ item.location }}">
+            <div class="form-group">
+                <input type="number" name="quantity" value="1" min="1" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-purple">Move IN</button>
+        </form>
+
+        <h3>Move OUT</h3>
+        <form method="POST" action="/inventory/remove" class="mb-4">
+            <input type="hidden" name="barcode" value="{{ item.barcode }}">
+            <div class="form-group">
+                <input type="number" name="quantity" value="1" min="1" max="{{ item.quantity }}" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-danger">Move OUT</button>
+        </form>
+
+        <a href="/" class="btn btn-secondary">Back to Home</a>
+    </div>
+</body>
+</html>
